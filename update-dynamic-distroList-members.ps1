@@ -24,3 +24,8 @@ function Get-Log {
     # Append the log entry to the log file
     Add-Content -Path $LogFilePath -Value $logEntry
 }
+
+# Set variables
+$logFilePath = ".\log.txt"
+$dynamicGroupName = "dph_all@dph.sc.gov"
+
