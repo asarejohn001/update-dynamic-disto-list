@@ -35,6 +35,32 @@ try {
 }
 catch {
     <#Do this if a terminating exception happens#>
-    Write-Host "Couldn't connect to EAC:" $_.error
+    Write-Host "Couldn't connect to EAC: $_"
     Exit
+}
+
+# Get the existing filter of the dynamic distribution group
+try {
+    $dynamicGroup = Get-DynamicDistributionGroup -Identity $dynamicGroupName
+    $currentFilter = $dynamicGroup.RecipientFilter
+
+    # Log current filter
+    Get-Log -LogFilePath $logFilePath -LogMessage "Current filter: $currentFilter"
+
+    # Update the filter to exclude the specific email address
+    $newCondition = " -and (-not(PrimarySmtpAddress -eq 'securityalerts@dhec.sc.gov'))"
+
+    # Update the dynamic distribution group's filter
+    Set-DynamicDistributionGroup -Identity $dynamicGroupName -RecipientFilter $newCondition
+    $newUpdatedFilter = $dynamicGroup.RecipientFilter
+
+    # Log success
+    Get-Log -LogFilePath $logFilePath -LogMessage "Updated filter: $newUpdatedFilter"
+}
+catch {
+    Get-Log -LogFilePath $logFilePath -LogMessage "Error updating dynamic distribution group: $_"
+}
+finally {
+    #Disconnect-ExchangeOnline -Confirm:$false
+    #Get-Log -LogFilePath $logFilePath -LogMessage "Disconnected from Exchange Online."
 }
