@@ -29,3 +29,12 @@ function Get-Log {
 $logFilePath = ".\log.txt"
 $dynamicGroupName = "dph_all@dph.sc.gov"
 
+# Connect to EAC
+try {
+    Connect-ExchangeOnline -ErrorAction Stop
+}
+catch {
+    <#Do this if a terminating exception happens#>
+    Write-Host "Couldn't connect to EAC:" $_.error
+    Exit
+}
