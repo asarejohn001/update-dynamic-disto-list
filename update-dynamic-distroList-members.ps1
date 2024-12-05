@@ -27,7 +27,7 @@ function Get-Log {
 
 # Set variables
 $logFilePath = ".\log.txt"
-$dynamicGroupName = "DHEC_All@dhec.sc.gov"
+$dynamicGroupName = "examplegroup@domain.com"
 
 # Connect to EAC
 try {
@@ -43,7 +43,7 @@ catch {
 $currentFilter = (Get-DynamicDistributionGroup -Identity $dynamicGroupName).RecipientFilter
 
 # Append the new exclusion condition
-$newCondition = " -and (-not(PrimarySmtpAddress -eq 'securityalerts@dhec.sc.gov'))"
+$newCondition = " -and (-not(PrimarySmtpAddress -eq 'someemail@domain.com'))"
 $updatedFilter = "($currentFilter)$newCondition"
 
 # Apply the updated filter
@@ -59,6 +59,6 @@ catch {
 
 
 finally {
-    #Disconnect-ExchangeOnline -Confirm:$false
-    #Get-Log -LogFilePath $logFilePath -LogMessage "Disconnected from Exchange Online."
+    Disconnect-ExchangeOnline -Confirm:$false
+    Get-Log -LogFilePath $logFilePath -LogMessage "Disconnected from Exchange Online."
 }
